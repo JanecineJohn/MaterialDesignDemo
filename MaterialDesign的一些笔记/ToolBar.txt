@@ -1,0 +1,28 @@
+1、隐藏原来的ActionBar：
+更改AndroidManifest.xml中application的android:theme属性：打开res/values/styles.xml文件，将style中的Theme.AppCompat.Light.DarkActionBar改为Theme.AppCompat.Light.NoActionBar(浅色主题，深色陪衬)或者Theme.AppCompat.NoActionBar(深色主题，浅色陪衬)
+
+2、在布局文件中加入ToolBar：
+    <!--定义一个Toolbar，并将其高度设置为actionBar的高度
+      android:theme将Toolbar的主题指定为深色主题，这样文字就是白色的，更好看
+      app:popupTheme单独将弹出的菜单项指定成了淡色主题-->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+3、在活动中用Toolbar代替actionBar：
+onCreate()
+{
+	super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+	//下面两句是重点
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+}
+
+其中，更改colorAccent的颜色值可以更改获得焦点的EditText等颜色(控件的选中状态)
+
+参考资料：第一行代码第二版P410

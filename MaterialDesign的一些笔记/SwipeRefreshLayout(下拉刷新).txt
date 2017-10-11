@@ -1,0 +1,11 @@
+可以实现下拉刷新。
+
+基本用法：
+1、把需要下拉刷新的组件(一般是RecyclerView)放到SwipeRefreshLayout中
+2、在活动中获取xml的组件实例，然后设置颜色(setColorSchemeResources)，最后设置下拉监听器
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //触发下拉刷新后的逻辑
+            }
+        });

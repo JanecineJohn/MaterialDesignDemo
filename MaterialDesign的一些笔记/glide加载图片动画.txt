@@ -1,0 +1,6 @@
+Glide是一个超级强大的图片加载库，可以用于加载本地图片、网络图片、GIF图片甚至是本地视频。且用法非常简单。
+
+用法：
+	在build.gradle中添加库依赖：打开https://github.com/bumptech/glide，根据README中的文字来操作
+
+注意：添加库依赖前保证compile 'com.android.support:appcompat-v7:26.+'版本是最新的

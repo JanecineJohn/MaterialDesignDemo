@@ -1,0 +1,9 @@
+高效率地在手机屏幕上显示图片等内容
+
+基本用法：
+	点击File，点击Project Structure，选择app模块，选择Dependencies模块，点击最右边的绿色加号，点击Library Dependency，选择recyclerview的最新版
+
+1、先创建一个类，定义图片的ID和详细描述。
+2、编写每一个图片组件的布局
+3、编写一个适配器，此适配器继承RecyclerView.Adapter，并将泛型指定为XXXX.ViewHolder，其中XXXX为适配器的名字
+

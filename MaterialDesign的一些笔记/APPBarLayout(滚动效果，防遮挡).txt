@@ -1,0 +1,13 @@
+APPBarLayout实际上是一个垂直方向的LinearLayout，内部做了很多滚动事件的封装。还能解决覆盖问题。
+
+基本用法：
+1、依赖design库：点击File，点击Project Structure，选择app模块，选择Dependencies模块，点击最右边的绿色加号，点击Library Dependency，选择support,design的最新版
+2、用AppBarLayout组件把ToolBar整个包含起来
+3、在RecyclerView中加入app:layout_behavior="@string/appbar_scrolling_view_behavior"，即可避免RecyclerView组件遮挡Toolbar
+4、在Toolbar中加入app:layout_scrollFlags="scroll|enterAlways|snap"，
+scroll表示Toolbar会跟着一起向上滚动并实现隐藏，
+enterAlways表示当RecyclerView向下滚动时，Toolbar会跟着一起向下滚动并重新显示，
+snap表示当Toolbar还没有完全隐藏或显示时，会根据当前滚动距离，自动选择隐藏或显示
+
+
+注意，滑动隐藏还要配合CoordinatorLayout一起用才行

@@ -1,0 +1,5 @@
+CoordinatorLayout相当于一个FrameLayout，可实现自动偏移效果
+
+基本用法：
+1、依赖design库：点击File，点击Project Structure，选择app模块，选择Dependencies模块，点击最右边的绿色加号，点击Library Dependency，选择support,design的最新版
+2、将要实现跟随自动偏移，避免被遮挡的组件全放在CoordinatorLayout里面

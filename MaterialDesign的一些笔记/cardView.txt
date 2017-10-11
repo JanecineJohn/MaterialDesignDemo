@@ -1,0 +1,4 @@
+cardView是用于实现卡片式布局效果的重要控件。提供了圆角和阴影等效果，看上去有立体的感觉。
+
+基本用法：
+	点击File，点击Project Structure，选择app模块，选择Dependencies模块，点击最右边的绿色加号，点击Library Dependency，选择cardView的最新版
