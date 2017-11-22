@@ -1,22 +1,35 @@
 package com.example.xin.materialdesigndemo;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.EditText;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    LinearLayout search;
-    private List<Pictures> picturesList = new ArrayList<>();
+    EditText search;
+    RecyclerView recyclerView;
+    Socket socket;
+    DataOutputStream out;
+    DataInputStream in;
+    Handler handler;
+    String type="彭于晏";
+    int page=1;/**用于后续下拉加载更多，自增达到加载下一页图片的效果*/
+    private List<String> picturesList = new ArrayList<>();
     private SwipeRefreshLayout swipeRefresh;//定义SwipeRefreshLayout组件，用于下拉刷新
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,24 +37,52 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        initPictures();//初始化图片
+
         init();//初始化组件
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        StaggeredGridLayoutManager layoutManager =
-                new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new PicturesAdapter(picturesList));
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                Log.i("在handler中picturesList的大小",picturesList.size()+"");
+                StaggeredGridLayoutManager layoutManager =
+                        new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+                layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(new PicturesAdapter(picturesList));
+            }
+        };
+
+
+        initPictures(type,page);//初始化图片
+        //recyclerView.setAdapter(new PicturesAdapter(picturesList));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            out.close();
+            in.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void init(){
         //点击搜索
-        search = (LinearLayout) findViewById(R.id.search);
+        search = (EditText) findViewById(R.id.search);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this,"假装进入了搜索页面",Toast.LENGTH_SHORT).show();
+                //写搜索逻辑
             }
         });
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+//        StaggeredGridLayoutManager layoutManager =
+//                new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+//        recyclerView.setLayoutManager(layoutManager);
 
         //下拉刷新
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
@@ -49,16 +90,10 @@ public class MainActivity extends AppCompatActivity {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Toast.makeText(MainActivity.this,"假装刷新了一下界面",
-                        Toast.LENGTH_SHORT).show();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            Thread.sleep(1000);
-                        }catch (InterruptedException e){
-                            e.printStackTrace();
-                        }
+                        initPictures(type,page);//重新初始化图片
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -70,34 +105,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void initPictures(){
-        Pictures a = new Pictures(R.drawable.a,"图片a");
-        picturesList.add(a);
-        Pictures b = new Pictures(R.drawable.b,"图片b");
-        picturesList.add(b);
-        Pictures c = new Pictures(R.drawable.c,"图片c");
-        picturesList.add(c);
-        Pictures d = new Pictures(R.drawable.d,"图片d");
-        picturesList.add(d);
-        Pictures e = new Pictures(R.drawable.e,"图片e");
-        picturesList.add(e);
-        Pictures f = new Pictures(R.drawable.f,"图片f");
-        picturesList.add(f);
-        Pictures g = new Pictures(R.drawable.g,"图片g");
-        picturesList.add(g);
-        Pictures h = new Pictures(R.drawable.h,"图片h");
-        picturesList.add(h);
-        Pictures i = new Pictures(R.drawable.i,"图片i");
-        picturesList.add(i);
-        Pictures j = new Pictures(R.drawable.j,"图片j");
-        picturesList.add(j);
-        Pictures k = new Pictures(R.drawable.k,"图片k");
-        picturesList.add(k);
-        Pictures l = new Pictures(R.drawable.l,"图片l");
-        picturesList.add(l);
-        Pictures m = new Pictures(R.drawable.m,"图片m");
-        picturesList.add(m);
-        Pictures n = new Pictures(R.drawable.n,"图片n");
-        picturesList.add(n);
+
+    //初始化图片
+    private void initPictures(final String mtype, final int mpage){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    picturesList.clear();//先清空集合
+                    socket = new Socket("192.168.56.1",10100);
+                    out = new DataOutputStream(socket.getOutputStream());
+                    in = new DataInputStream(socket.getInputStream());
+                    String url;
+                    out.writeUTF(mtype);
+                    out.writeUTF(mpage+"");
+                    int size = Integer.parseInt(in.readUTF());//拿到图片张数
+                    for (int i=0;i<size;i++){
+                        url = in.readUTF();
+                        picturesList.add(url);
+                    }
+                    //Log.i("pictureList的大小------------------",picturesList.size()+"");
+                    page++;
+                    //Log.i("页数：",page+"");
+                    handler.sendMessage(handler.obtainMessage());
+                }catch (Exception e){
+                    e.printStackTrace();
+                    System.out.print("初始化连接失败，输入输出流异常");
+                }finally {
+                    try {
+                        in.close();
+                        out.close();
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 }

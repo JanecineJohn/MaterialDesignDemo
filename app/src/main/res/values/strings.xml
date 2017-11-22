@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MaterialDesignDemo</string>
+    <string name="test_bt">测试按钮</string>
 </resources>
