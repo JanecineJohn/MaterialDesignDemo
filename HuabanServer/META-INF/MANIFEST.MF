@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: jsoup-1.8.3.jar commons-lang3-3.1.jar
+Main-Class: com.company.Main
+

@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         init();//初始化组件
@@ -53,20 +53,20 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-        initPictures(type,page);//初始化图片
+        initPictures(type,page);//初始化图片*/
         //recyclerView.setAdapter(new PicturesAdapter(picturesList));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
+        /*try {
             out.close();
             in.close();
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private void init(){
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     picturesList.clear();//先清空集合
-                    socket = new Socket("192.168.56.1",10100);
+                    socket = new Socket("10.242.10.30",10100);
                     out = new DataOutputStream(socket.getOutputStream());
                     in = new DataInputStream(socket.getInputStream());
                     String url;

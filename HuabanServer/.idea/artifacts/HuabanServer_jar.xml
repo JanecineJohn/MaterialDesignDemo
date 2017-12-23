@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="HuabanServer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/HuabanServer_jar</output-path>
+    <root id="root">
+      <element id="archive" name="HuabanServer.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="HuabanServer" />
+      </element>
+      <element id="library" level="project" name="jsoup-1.8.3" />
+      <element id="library" level="project" name="commons-lang3-3.1" />
+    </root>
+  </artifact>
+</component>
