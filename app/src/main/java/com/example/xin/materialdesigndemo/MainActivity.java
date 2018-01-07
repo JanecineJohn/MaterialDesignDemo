@@ -10,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import java.io.DataInputStream;
@@ -21,13 +22,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText search;
     RecyclerView recyclerView;
     Socket socket;
     DataOutputStream out;
     DataInputStream in;
     Handler handler;
-    String type="彭于晏";
+    String type="高清壁纸1920x1080";
     int page=1;/**用于后续下拉加载更多，自增达到加载下一页图片的效果*/
     private List<String> picturesList = new ArrayList<>();
     private SwipeRefreshLayout swipeRefresh;//定义SwipeRefreshLayout组件，用于下拉刷新
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         init();//初始化组件
@@ -46,40 +46,52 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("在handler中picturesList的大小",picturesList.size()+"");
                 StaggeredGridLayoutManager layoutManager =
                         new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-                layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+                //layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(new PicturesAdapter(picturesList));
             }
         };
 
 
-        initPictures(type,page);//初始化图片*/
+        initPictures(type,page);//初始化图片
         //recyclerView.setAdapter(new PicturesAdapter(picturesList));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        /*try {
+        try {
             out.close();
             in.close();
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     private void init(){
         //点击搜索
-        search = (EditText) findViewById(R.id.search);
-        search.setOnClickListener(new View.OnClickListener() {
+        final EditText search = (EditText) findViewById(R.id.search);
+        Button searchBt = (Button) findViewById(R.id.searchBt);
+        searchBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //写搜索逻辑
+                //只要点击搜索，先把页数清零
+                page = 1;
+                type = search.getText().toString();
+                initPictures(type,page);
             }
         });
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE){
+                }
+            }
+        });
 //        StaggeredGridLayoutManager layoutManager =
 //                new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
 //        recyclerView.setLayoutManager(layoutManager);
@@ -113,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     picturesList.clear();//先清空集合
-                    socket = new Socket("10.242.10.30",10100);
+                    //socket = new Socket("10.242.10.30",10100);
+                    socket = new Socket("192.168.1.102",10100);
                     out = new DataOutputStream(socket.getOutputStream());
                     in = new DataInputStream(socket.getInputStream());
                     String url;

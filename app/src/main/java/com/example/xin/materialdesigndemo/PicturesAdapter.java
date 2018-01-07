@@ -27,6 +27,11 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.ViewHo
     private List<String> mPicturesList;
     public String imageUrl;
 
+    private int normalType = 0;     // 第一种ViewType，正常的item
+    private int footType = 1;       // 第二种ViewType，底部的提示View
+
+    
+
     public PicturesAdapter(List<String> picturesList){
         mPicturesList = picturesList;
     }

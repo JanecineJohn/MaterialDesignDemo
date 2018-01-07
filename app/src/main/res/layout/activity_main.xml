@@ -32,22 +32,29 @@
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:layout_scrollFlags="scroll|enterAlways|snap">
-                <LinearLayout
-                    android:orientation="horizontal"
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp"
                     android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:background="@drawable/search_bg">
+                    android:focusableInTouchMode="true">
 
                     <EditText
                         android:id="@+id/search"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/search_bg"
                         android:hint="搜索花瓣"/>
-                </LinearLayout>
+                    <Button
+                        android:id="@+id/searchBt"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_gravity="right"
+                        android:background="@drawable/search"/>
+                </FrameLayout>
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
