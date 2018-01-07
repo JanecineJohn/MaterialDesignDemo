@@ -129,4 +129,20 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.ViewHo
             pictureText = itemView.findViewById(R.id.pictures_text);
         }
     }
+
+    public void upDateList(List<String> picturesList){
+        int sizeBefore = mPicturesList.size();
+        if (picturesList != null){
+            mPicturesList.addAll(picturesList);
+        }
+        notifyDataSetChanged();
+        //notifyItemChanged(mPicturesList.size());
+    }
+//    public void refreshDateList(List<String> picturesList){
+//        if (picturesList != null){
+//            mPicturesList.clear();
+//            mPicturesList.addAll(picturesList);
+//        }
+//        notifyDataSetChanged();
+//    }
 }
