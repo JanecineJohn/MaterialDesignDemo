@@ -141,8 +141,8 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     picturesList.clear();//先清空集合
-                    //socket = new Socket("10.242.10.30",10100);
-                    socket = new Socket("192.168.1.102",10100);
+                    socket = new Socket("10.242.10.30",10100);
+                    //socket = new Socket("192.168.1.102",10100);
                     out = new DataOutputStream(socket.getOutputStream());
                     in = new DataInputStream(socket.getInputStream());
                     String url;
